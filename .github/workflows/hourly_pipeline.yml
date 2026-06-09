@@ -1,0 +1,31 @@
+name: Hourly Feature Pipeline
+
+# 1. Robot kab chalega?
+on:
+  schedule:
+    - cron: '0 * * * *'  # Is code ka matlab hai: "Har ghante ki shuruvat me (jaise 1:00, 2:00, 3:00) chalna"
+  workflow_dispatch:      # Isse GitHub par ek button aa jayega, jise daba kar aap jab chahein robot ko manually chala sakte hain.
+
+# 2. Robot kya kaam karega?
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest  # GitHub hamein ek free ka temporary computer dega cloud par
+    steps:
+    - name: Checkout Code   # Robot hamara code download karega
+      uses: actions/checkout@v3
+
+    - name: Setup Python    # Wo us computer me Python install karega
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Libraries  # Wo pandas aur hopsworks download karega
+      run: |
+        pip install hopsworks requests pandas
+
+    - name: Run Feature Pipeline  # Akhir me wo hamari script chala dega
+      env:
+        # Humne jo chabi Step 1 me chhupayi thi, wo yahan se robot ko mil jayegi
+        OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+        HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
+      run: python feature_pipeline.py
