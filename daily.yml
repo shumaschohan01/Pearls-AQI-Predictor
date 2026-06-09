@@ -1,0 +1,29 @@
+name: Daily Pipeline
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs at the top of every hour
+  workflow_dispatch:      # Allows you to click a button to run it manually
+
+jobs:
+  run-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas requests scikit-learn joblib
+
+      - name: Run pipeline
+        env:
+          API_KEY: ${{ secrets.API_KEY }} # This pulls your secret key
+        run: |
+          python data_pipeline.py
+          python train_model.py
