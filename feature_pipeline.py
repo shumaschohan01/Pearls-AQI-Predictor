@@ -1,3 +1,4 @@
+import os
 import datetime
 import hopsworks
 import pandas as pd
