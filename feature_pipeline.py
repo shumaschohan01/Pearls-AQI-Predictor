@@ -1,12 +1,23 @@
 import os
+import subprocess
+import sys
+
+# Agar robot ke paas pyarrow nahi hai, toh ye line use khud install kar degi!
+try:
+    import pyarrow
+except ImportError:
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "pyarrow", "hopsworks==4.7.*"]
+    )
+
 import datetime
 import hopsworks
 import pandas as pd
 import requests
 
-
-OPENWEATHER_API_KEY = os.environ.get('OPENWEATHER_API_KEY')
-HOPSWORKS_API_KEY = os.environ.get('HOPSWORKS_API_KEY')
+# Baaki ka aapka purana code yahan se shuru hoga...
+OPENWEATHER_API_KEY = os.environ.get("OPENWEATHER_API_KEY")
+HOPSWORKS_API_KEY = os.environ.get("HOPSWORKS_API_KEY")
 CITY = "Delhi"
 
 
